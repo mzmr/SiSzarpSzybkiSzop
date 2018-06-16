@@ -10,44 +10,35 @@ namespace Szop.Controllers
 {
     public class ProductsController : ApiController
     {
-      /*  private readonly IRepository<Product> db;
-        private readonly ILogger logger;
+        /*  private StoreContext db = new StoreContext();
 
-        public ProductsController(IRepository<Product> repo, ILogger logger)
+          // GET <controller>
+          public IEnumerable<Product> Get()
+          {
+              return db.Products;
+          }
+
+          // GET: api/Books/5
+        [ResponseType(typeof(Product))]
+        public IHttpActionResult GetProduct(int id)
         {
-            db = repo;
-            this.logger = logger;
+            Product product = db.Products.Find(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(product);
         }
 
-        // GET <controller>
-        public IEnumerable<Product> Get()
-        {
-            logger.Write("[GET] (Products)", LogLevel.INFO);
-            return db.GetAll();
-        }
-
-        // GET <controller>/5
-        public Product Get(int id)
-        {
-            logger.Write($"[GET] (Products) /{id}", LogLevel.INFO);
-            return db.Get(id);
-        }
-
-        // POST <controller>
-        public void Post([FromBody]Product value)
-        {
-            logger.Write("[POST] (Products)", LogLevel.INFO);
-            db.Add(value);
-        }
-
-        // DELETE <controller>/5
-        public void Delete(int id)
-        {
-            logger.Write($"[DELETE] (Products) /{id}", LogLevel.INFO);
-            db.Delete(id);
-        }
-    }*/
-    Product[] products = new Product[]
+          // POST <controller>
+          public void Post([FromBody]Product value)
+          {
+               db.Books.Add(book);
+               db.SaveChanges();
+          }
+      }*/
+        Product[] products = new Product[]
         {
             new Product {
                 Id = 1,
@@ -86,6 +77,7 @@ namespace Szop.Controllers
         {
             return $"{q}\n{c}\n{pmin}\n{pmax}";
         }
+
         public IHttpActionResult GetProduct(int id)
         {
             var product = products.FirstOrDefault((p) => p.Id == id);
@@ -94,6 +86,12 @@ namespace Szop.Controllers
                 return NotFound();
             }
             return Ok(product);
+        }
+
+        // POST <controller>
+        public int Post([FromBody]Product value)
+        {
+            return value.Id;
         }
     }
 }
