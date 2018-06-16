@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
+using Szop.DBModels;
 using Szop.Models;
 
 namespace Szop.DAL
@@ -14,9 +15,9 @@ namespace Szop.DAL
             this.Configuration.ProxyCreationEnabled = false;
         }
 
-        public DbSet<Product> Products { get; set; }
-        public DbSet<User> Users { get; set; }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Cart> Carts { get; set; }
+        public DbSet<DBProduct> Products { get; set; }
+        public DbSet<DBUser> Users { get; set; }
+        public DbSet<DBCategory> Categories { get; set; }
+        public DbSet<DBCart> Carts { get; set; }
     }
 }
