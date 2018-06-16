@@ -4,52 +4,57 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using Szop.DAL;
+using Szop.DBModels;
 using Szop.Models;
 
 namespace Szop.Controllers
 {
     public class CategoriesController : ApiController
     {
-        /*private StoreContext db = new StoreContext();
+        private ShopContext db = new ShopContext();
 
-        // POST <controller>
-        public void Post([FromBody]Category value)
-        {
-            db.Categories.Add(value);
-            db.SaveChanges();
-        }
 
-        // GET <controller>
-        public IEnumerable<Category> Get()
-        {
-            return db.Categories;
-        }*/
-        Category[] categories = new Category[]
-       {
-            new Category {
-                Id = 1,
-                Name = "Tomato Soup",
-            },
-            new Category {
-                Id = 2,
-                Name = "Yo-yo",
-            },
-            new Category {
-                Id = 3,
-                Name = "Hammer",
-            }
-       };
         // POST <controller>
         public int Post([FromBody]Category value)
         {
+            db.Categories.Add(InverseMap(value));
+            db.SaveChanges();
+
             return value.Id;
         }
 
         // GET <controller>
         public IEnumerable<Category> Get()
         {
-            return categories;
+            IEnumerable<DBCategory> dbList = db.Categories;
+            List<Category> list = new List<Category>();
+            foreach (DBCategory cat in dbList)
+            {
+                list.Add(Map(cat));
+            }
+            return list;
         }
 
+        internal Category Map(DBCategory dbCategory)
+        {
+            if (dbCategory == null)
+                return null;
+            return new Category()
+            {
+                Id = dbCategory.Id,
+                Name = dbCategory.Name,
+            };
+        }
+
+        internal DBCategory InverseMap(Category category)
+        {
+            if (category == null)
+                return null;
+            return new DBCategory()
+            {
+                Id = category.Id,
+                Name = category.Name,
+            };
+        }
     }
 }
