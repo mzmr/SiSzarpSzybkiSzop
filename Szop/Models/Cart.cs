@@ -7,7 +7,7 @@ namespace Szop.Models
 {
     public class Cart
     {
-        public User UserId { get; set; }
-        public Product ProductId { get; set; }
+        public User User { get; set; }
+        public Product Product { get; set; }
     }
 }

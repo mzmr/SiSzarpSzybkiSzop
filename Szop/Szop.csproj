@@ -93,6 +93,10 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="DAL\StoreContext.cs" />
+    <Compile Include="DBModels\DBCart.cs" />
+    <Compile Include="DBModels\DBCategory.cs" />
+    <Compile Include="DBModels\DBProduct.cs" />
+    <Compile Include="DBModels\DBUser.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
