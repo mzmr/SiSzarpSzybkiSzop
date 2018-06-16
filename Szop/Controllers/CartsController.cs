@@ -12,8 +12,8 @@ namespace Szop.Controllers
         Cart[] carts = new Cart[]
         {
            new Cart {
-            UserId = new User {Id = 1, Email = "aaa", PassHash = "sss" },
-            ProductId = new Product {
+            User = new User {Id = 1, Email = "aaa", PassHash = "sss" },
+            Product = new Product {
                 Id = 2,
                 Name = "Yo-yo",
                 Price = 3.75M,

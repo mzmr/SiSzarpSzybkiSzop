@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Szop.DAL;
+using Szop.DBModels;
 using Szop.Models;
 
 namespace Szop.Controllers
@@ -66,10 +68,12 @@ namespace Szop.Controllers
             }
         };
 
+        private ShopContext db = new ShopContext();
+
         [HttpGet]
-        public IEnumerable<Product> GetAllProducts()
+        public IEnumerable<DBProduct> GetAllProducts()
         {
-            return products;
+            return db.Products;
         }
 
         [HttpGet]
