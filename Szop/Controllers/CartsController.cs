@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
+using Szop.DAL;
+using Szop.DBModels;
 using Szop.Models;
 
 namespace Szop.Controllers
 {
     public class CartsController : ApiController
     {
+        private ShopContext db = new ShopContext();
         Cart[] carts = new Cart[]
         {
            new Cart {
@@ -39,6 +42,41 @@ namespace Szop.Controllers
         public int delete(int id)
         {
             return 1;
+        }
+
+        internal Cart Map(DBCart dbCart)
+        {
+            DBProduct prod = db.Products.Find(dbCart.ProductId);
+            DBUser user = db.Users.Find(dbCart.UserId);
+            DBCategory c = db.Categories.Find(prod.CategoryId);
+            if (dbCart == null)
+                return null;
+            return new Cart()
+            {
+                Id = dbCart.Id,
+                User = new User {Id = user.Id, Email = user.Email, PassHash = user.PassHash },
+                Product = new Product
+                {
+                    Id = prod.Id,
+                    Name = prod.Name,
+                    Price = prod.Price,
+                    Category = new Category { Id = c.Id, Name = c.Name },
+                    Image = prod.Image,
+                    Description = prod.Description
+                },
+                Quantity = dbCart.Quantity
+            };
+        }
+
+        internal DBCart InverseMap(Cart cart)
+        {
+            return new DBCart()
+            {
+                Id = cart.Id,
+                UserId = cart.User.Id,
+                ProductId = cart.Product.Id,
+                Quantity = cart.Quantity
+            };
         }
     }
 }
