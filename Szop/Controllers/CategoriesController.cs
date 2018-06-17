@@ -13,7 +13,6 @@ namespace Szop.Controllers
     {
         private ShopContext db = new ShopContext();
 
-
         // POST <controller>
         public int Post([FromBody]Category value)
         {
@@ -21,6 +20,21 @@ namespace Szop.Controllers
             db.SaveChanges();
 
             return value.Id;
+        }
+
+        // DELETE: api/Category/5
+        public IHttpActionResult DeleteCategory(int id)
+        {
+            DBCategory category = db.Categories.Find(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            db.Categories.Remove(category);
+            db.SaveChanges();
+
+            return Ok(category);
         }
 
         // GET <controller>
