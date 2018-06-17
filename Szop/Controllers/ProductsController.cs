@@ -24,13 +24,17 @@ namespace Szop.Controllers
             }
             return list;
         }
-        /*
-        public IEnumerable<Product> Get(string q, string c = null, string pmin = null, string pmax = null)
+        
+        public IEnumerable<Product> Get(string q, int c = -1, string pmin = null, string pmax = null)
         {
-            IEnumerable<DBProduct> dbList = db.Products.Where(x => (x.Name==q) && (x.CategoryId || x.CategoryId==null));
-            //return $"{q}\n{c}\n{pmin}\n{pmax}";
+
+            IEnumerable<DBProduct> dbList = db.Products.Where(x =>
+                x.Name.ToLower().Contains(q.ToLower())// &&
+                //(c == null || x.CategoryId)
+            );
+            return null;
         }
-        */
+        
         public IHttpActionResult GetProduct(int id)
         {
             DBProduct product = db.Products.Find(id);
