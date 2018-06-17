@@ -14,24 +14,14 @@ namespace Szop.Controllers
     {
         private ShopContext db = new ShopContext();
 
-
-        public IEnumerable<Product> GetAllProducts()
+        public IEnumerable<Product> Get(string q = null, int c = -1, decimal pmin = -1, decimal pmax = -1)
         {
-            return db.Products.AsEnumerable().Select(p => Map(p));
-        }
-        
-        public IEnumerable<Product> Get(string q, int c = -1, decimal pmin = -1, decimal pmax = -1)
-        {
-            IEnumerable<DBProduct> dbList = db.Products.Where(x =>
-                x.Name.ToLower().Contains(q.ToLower()) &&
+            return db.Products.AsEnumerable().Where(x =>
+                (q == null || x.Name.ToLower().Contains(q.ToLower()) || x.Description.ToLower().Contains(q.ToLower())) &&
                 (c == -1 || x.CategoryId == c) &&
                 (pmin == -1 || x.Price >= pmin) &&
                 (pmax == -1 || x.Price <= pmax)
-            );
-            //return dbList.Select(x => new Product() {
-            //    Category = x.Ca
-            //});
-            return null;
+            ).Select(p => Map(p));
         }
         
         public IHttpActionResult GetProduct(int id)
