@@ -16,10 +16,10 @@ namespace Szop.Controllers
         // POST <controller>
         public int Post([FromBody]Category value)
         {
-            db.Categories.Add(InverseMap(value));
+            DBCategory added = db.Categories.Add(InverseMap(value));
             db.SaveChanges();
 
-            return value.Id;
+            return added.Id;
         }
 
         // DELETE: api/Category/5

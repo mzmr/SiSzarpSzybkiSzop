@@ -17,21 +17,20 @@ namespace Szop.Controllers
 
         public IEnumerable<Product> GetAllProducts()
         {
-            IEnumerable<DBProduct> dbList = db.Products;
-            List<Product> list = new List<Product>();
-            foreach (DBProduct prod in dbList){
-                list.Add(Map(prod));
-            }
-            return list;
+            return db.Products.AsEnumerable().Select(p => Map(p));
         }
         
-        public IEnumerable<Product> Get(string q, int c = -1, string pmin = null, string pmax = null)
+        public IEnumerable<Product> Get(string q, int c = -1, decimal pmin = -1, decimal pmax = -1)
         {
-
             IEnumerable<DBProduct> dbList = db.Products.Where(x =>
-                x.Name.ToLower().Contains(q.ToLower())// &&
-                //(c == null || x.CategoryId)
+                x.Name.ToLower().Contains(q.ToLower()) &&
+                (c == -1 || x.CategoryId == c) &&
+                (pmin == -1 || x.Price >= pmin) &&
+                (pmax == -1 || x.Price <= pmax)
             );
+            //return dbList.Select(x => new Product() {
+            //    Category = x.Ca
+            //});
             return null;
         }
         
@@ -71,9 +70,10 @@ namespace Szop.Controllers
 
         internal Product Map(DBProduct dbProduct)
         {
-            DBCategory c = db.Categories.Find(dbProduct.CategoryId);
             if (dbProduct == null)
                 return null;
+
+            DBCategory c = db.Categories.Find(dbProduct.CategoryId);
             return new Product()
             {
                 Id = dbProduct.Id,
