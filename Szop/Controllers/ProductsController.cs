@@ -43,12 +43,26 @@ namespace Szop.Controllers
         }
 
         // POST <controller>
-        public int Post([FromBody]Product value)
+        public int Post([FromBody]DBProduct value)
         {
-            db.Products.Add(InverseMap(value));
+            db.Products.Add(value);
             db.SaveChanges();
 
             return value.Id;
+        }
+
+        public IHttpActionResult DeleteProduct(int id)
+        {
+            DBProduct product = db.Products.Find(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            db.Products.Remove(product);
+            db.SaveChanges();
+
+            return Ok(product);
         }
 
         internal Product Map(DBProduct dbProduct)
