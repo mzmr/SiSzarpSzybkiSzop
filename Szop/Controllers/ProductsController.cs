@@ -12,90 +12,74 @@ namespace Szop.Controllers
 {
     public class ProductsController : ApiController
     {
-        /*  private StoreContext db = new StoreContext();
-
-          // GET <controller>
-          public IEnumerable<Product> Get()
-          {
-              return db.Products;
-          }
-
-          // GET: api/Books/5
-        [ResponseType(typeof(Product))]
-        public IHttpActionResult GetProduct(int id)
-        {
-            Product product = db.Products.Find(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(product);
-        }
-
-          // POST <controller>
-          public void Post([FromBody]Product value)
-          {
-               db.Books.Add(book);
-               db.SaveChanges();
-          }
-      }*/
-        Product[] products = new Product[]
-        {
-            new Product {
-                Id = 1,
-                Name = "Tomato Soup",
-                Price = 1,
-                Category = new Category { Id = 1, Name = "Groceries" },
-                Image = "asdfasd",
-                Description = "a nice suop"
-            },
-            new Product {
-                Id = 2,
-                Name = "Yo-yo",
-                Price = 3.75M,
-                Category = new Category { Id = 2, Name = "Toys" },
-                Image = "adgsrvjtchsegc4w5gc",
-                Description = "funny toys"
-            },
-            new Product {
-                Id = 3,
-                Name = "Hammer",
-                Price = 16.99M,
-                Category = new Category { Id = 3, Name = "Hardware" },
-                Image = "",
-                Description = "pricy hardware isn't cheap"
-            }
-        };
-
         private ShopContext db = new ShopContext();
 
-        [HttpGet]
-        public IEnumerable<DBProduct> GetAllProducts()
-        {
-            return db.Products;
-        }
 
-        [HttpGet]
-        public string Get(string q, string c = null, string pmin = null, string pmax = null)
+        public IEnumerable<Product> GetAllProducts()
         {
-            return $"{q}\n{c}\n{pmin}\n{pmax}";
+            IEnumerable<DBProduct> dbList = db.Products;
+            List<Product> list = new List<Product>();
+            foreach (DBProduct prod in dbList){
+                list.Add(Map(prod));
+            }
+            return list;
         }
-
+        /*
+        public IEnumerable<Product> Get(string q, string c = null, string pmin = null, string pmax = null)
+        {
+            IEnumerable<DBProduct> dbList = db.Products.Where(x => (x.Name==q) && (x.CategoryId || x.CategoryId==null));
+            //return $"{q}\n{c}\n{pmin}\n{pmax}";
+        }
+        */
         public IHttpActionResult GetProduct(int id)
         {
-            var product = products.FirstOrDefault((p) => p.Id == id);
+            DBProduct product = db.Products.Find(id);
             if (product == null)
             {
                 return NotFound();
             }
-            return Ok(product);
+
+            return Ok(Map(product));
         }
 
         // POST <controller>
         public int Post([FromBody]Product value)
         {
+            db.Products.Add(InverseMap(value));
+            db.SaveChanges();
+
             return value.Id;
+        }
+
+        internal Product Map(DBProduct dbProduct)
+        {
+            DBCategory c = db.Categories.Find(dbProduct.CategoryId);
+            if (dbProduct == null)
+                return null;
+            return new Product()
+            {
+                Id = dbProduct.Id,
+                Name = dbProduct.Name,
+                Price = dbProduct.Price,
+                Category = new Category { Id = c.Id, Name = c.Name },
+                Image = dbProduct.Image,
+                Description = dbProduct.Description
+            };
+        }
+
+        internal DBProduct InverseMap(Product product)
+        {
+            if (product == null)
+                return null;
+            return new DBProduct()
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price,
+                CategoryId = product.Category.Id,
+                Image = product.Image,
+                Description = product.Description
+            };
         }
     }
 }
