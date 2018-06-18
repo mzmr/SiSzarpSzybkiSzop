@@ -40,13 +40,7 @@ namespace Szop.Controllers
         // GET <controller>
         public IEnumerable<Category> Get()
         {
-            IEnumerable<DBCategory> dbList = db.Categories;
-            List<Category> list = new List<Category>();
-            foreach (DBCategory cat in dbList)
-            {
-                list.Add(Map(cat));
-            }
-            return list;
+            return db.Categories.AsEnumerable().Select(c => Map(c));
         }
 
         internal Category Map(DBCategory dbCategory)
