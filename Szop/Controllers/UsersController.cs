@@ -23,21 +23,29 @@ namespace Szop.Controllers
 
         [HttpPost]
         [Route("users/sign-up")]
-        public int PostSignUp([FromBody]User user)
+        public HttpResponseMessage PostSignUp([FromBody]User user)
         {
-            DBUser added = db.Users.Add(InverseMap(user));
+            if (db.Users.Any(u => u.Email.Equals(user.Email)))
+                return Request.CreateResponse(HttpStatusCode.Forbidden, $"User with email {user.Email} already exists.", Configuration.Formatters.JsonFormatter);
+
+            db.Users.Add(InverseMap(user));
             db.SaveChanges();
-            return added.Id;
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
 
         [HttpPost]
         [Route("users/sign-in")]
         public HttpResponseMessage PostSignIn([FromBody]User user)
         {
-            DBUser profile = db.Users.AsEnumerable().Where(u =>
+            IEnumerable<DBUser> usrs = db.Users.AsEnumerable().Where(u =>
                 u.Email.Equals(user.Email) &&
                 SecurePasswordHasher.Verify(user.Password, u.PassHash)
-            ).First();
+            );
+
+            if (usrs.Count() == 0)
+                return Request.CreateResponse(HttpStatusCode.Unauthorized, "Invalid User", Configuration.Formatters.JsonFormatter);
+
+            DBUser profile = usrs.First();
 
             if (profile == null)
                 return Request.CreateResponse(HttpStatusCode.Unauthorized, "Invalid User", Configuration.Formatters.JsonFormatter);
