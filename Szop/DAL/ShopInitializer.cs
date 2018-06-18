@@ -7,7 +7,7 @@ using Szop.Models;
 
 namespace Szop.DAL
 {
-    public class ShopInitializer : System.Data.Entity.DropCreateDatabaseIfModelChanges<ShopContext>
+    public class ShopInitializer : System.Data.Entity.DropCreateDatabaseAlways<ShopContext>
     {
         protected override void Seed(ShopContext context)
         {
@@ -51,6 +51,14 @@ namespace Szop.DAL
                     CategoryId = 7,
                     Image = "https://maciejgnyszka.pl/wp-content/uploads/lego-1080x675.jpg",
                     Description = "Duże klocki dla małych dzieci"
+                },
+                new DBProduct {
+                    Id = 4,
+                    Name = "Lalka",
+                    Price = 66.66M,
+                    CategoryId = 3,
+                    Image = "https://www.smykoland.pl/simba-masza-lalka-interaktywna.1.jpg",
+                    Description = "Przyjazna urocza lalka"
                 }
             };
 
